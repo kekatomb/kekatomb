@@ -41,11 +41,14 @@ def ordinal_suffix(day):
     return ORDINAL_SUFFIXES.get(day % 10, "th")
 
 
-def format_post_date(value):
+def parse_rss_date(value):
     try:
-        parsed = datetime.datetime.strptime(value, RSS_DATE_FORMAT)
+        return datetime.datetime.strptime(value, RSS_DATE_FORMAT)
     except (ValueError, TypeError):
         return None
+
+
+def format_post_date(parsed):
     return f"{parsed.strftime('%B')} {parsed.day}{ordinal_suffix(parsed.day)}, {parsed.year}"
 
 
@@ -57,18 +60,19 @@ def build_blog_section():
     root = ElementTree.fromstring(feed)
     posts = []
     for item in root.iter("item"):
-        date = format_post_date(item.findtext("pubDate", default=""))
-        if date is None:
+        parsed = parse_rss_date(item.findtext("pubDate", default=""))
+        if parsed is None:
             continue
         posts.append(
             {
                 "title": item.findtext("title", default="").strip(),
                 "link": item.findtext("link", default="").strip(),
-                "pub_date": date,
+                "pub_date": format_post_date(parsed),
+                "parsed": parsed,
             }
         )
 
-    posts.sort(key=lambda post: post["pub_date"], reverse=True)
+    posts.sort(key=lambda post: post["parsed"], reverse=True)
     if not posts:
         return []
 
