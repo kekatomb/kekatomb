@@ -32,12 +32,21 @@ def fetch_json(url):
     return json.loads(content)
 
 
+ORDINAL_SUFFIXES = {1: "st", 2: "nd", 3: "rd"}
+
+
+def ordinal_suffix(day):
+    if 10 <= day % 100 <= 20:
+        return "th"
+    return ORDINAL_SUFFIXES.get(day % 10, "th")
+
+
 def format_post_date(value):
     try:
         parsed = datetime.datetime.strptime(value, RSS_DATE_FORMAT)
     except (ValueError, TypeError):
         return None
-    return parsed.strftime("%Y-%m-%d")
+    return f"{parsed.strftime('%B')} {parsed.day}{ordinal_suffix(parsed.day)}, {parsed.year}"
 
 
 def build_blog_section():
@@ -65,7 +74,7 @@ def build_blog_section():
 
     lines = ["## latest blog posts"]
     for post in posts[:MAX_POSTS]:
-        lines.append(f"- [{post['title']}]({post['link']}) - {post['pub_date']}")
+        lines.append(f"- {post['pub_date']}, [{post['title']}]({post['link']})")
     return lines
 
 

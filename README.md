@@ -1,8 +1,8 @@
 ## latest blog posts
 
-- [Introducing astro-erudite v2](https://lindg.re/blog/introducing-v2/) - 2026-06-06
+- May 21st, 2025, [v1 Posts](https://lindg.re/blog/v1-posts/)
 
-- [v1 Posts](https://lindg.re/blog/v1-posts/) - 2025-05-21
+- June 6th, 2026, [Introducing astro-erudite v2](https://lindg.re/blog/introducing-v2/)
 
 ## study
 | Repository | Description |
