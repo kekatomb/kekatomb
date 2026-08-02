@@ -6,7 +6,7 @@ GET OFF MY 'PUTER KITTAY!!!
 
 - May 21st, 2025, [v1 Posts](https://lindg.re/blog/v1-posts/)
 
-## study
+## Study
 | Repository | Description | Languages |
 |------------|-------------|-----------|
 | [cryptography](https://github.com/kekatomb/cryptography) | military grade |  |

@@ -115,7 +115,7 @@ def build_tag_section():
     sections = []
     for topic in sorted(by_topic):
         sections.append(
-            f"## {topic}\n"
+            f"## {topic.capitalize()}\n"
             f"| Repository | Description | Languages |\n"
             f"|------------|-------------|-----------|\n"
             + "\n".join(by_topic[topic])
