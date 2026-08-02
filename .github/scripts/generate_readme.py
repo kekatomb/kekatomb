@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ElementTree
 GITHUB_USER = "kekatomb"
 RSS_URL = "https://lindg.re/rss.xml"
 GITHUB_API = f"https://api.github.com/users/{GITHUB_USER}"
-BLOG_URL = "https://lindg.re/blog/"
+REPOS_API = f"https://api.github.com/repos/{GITHUB_USER}"
 
 MAX_POSTS = 3
 TOP_LANGUAGES = 3
@@ -81,7 +81,6 @@ def build_blog_section():
     lines = ["## Latest Blog Posts"]
     for post in posts[:MAX_POSTS]:
         lines.append(f"- {post['pub_date']}, [{post['title']}]({post['link']})")
-    lines.append(f"\n[All Posts]({BLOG_URL})")
     return lines
 
 
@@ -102,9 +101,7 @@ def build_tag_section():
     for repo in repos:
         name = repo["name"]
         description = (repo.get("description") or "").strip()
-        languages = summarize_languages(
-            fetch_json(f"{GITHUB_API}/repos/{name}/languages")
-        )
+        languages = summarize_languages(fetch_json(f"{REPOS_API}/{name}/languages"))
         row = (
             f"| [{name}](https://github.com/{GITHUB_USER}/{name}) "
             f"| {description} | {languages} |"
