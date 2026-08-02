@@ -7,4 +7,5 @@
 ## study
 | Repository | Description |
 |------------|-------------|
-| [lean](https://github.com/kekatomb/lean) |  |
+| [cryptography](https://github.com/kekatomb/cryptography) | military grade. |
+| [lean](https://github.com/kekatomb/lean) | all of this to make some purrpp wock? |
