@@ -7,13 +7,15 @@ import xml.etree.ElementTree as ElementTree
 
 GITHUB_USER = "kekatomb"
 RSS_URL = "https://lindg.re/rss.xml"
-GITHUB_API = f"https://api.github.com/users/{GITHUB_USER}/repos"
+GITHUB_API = f"https://api.github.com/users/{GITHUB_USER}"
+BLOG_URL = "https://lindg.re/blog/"
 
 MAX_POSTS = 3
+TOP_LANGUAGES = 3
 RSS_DATE_FORMAT = "%a, %d %b %Y %H:%M:%S %Z"
-README_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "..", "README.md"
-)
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+README_PATH = os.path.join(REPO_ROOT, "README.md")
+PROFILE_PATH = os.path.join(REPO_ROOT, "PROFILE.md")
 
 
 def fetch_bytes(url):
@@ -76,14 +78,23 @@ def build_blog_section():
     if not posts:
         return []
 
-    lines = ["## latest blog posts"]
+    lines = ["## Latest Blog Posts"]
     for post in posts[:MAX_POSTS]:
         lines.append(f"- {post['pub_date']}, [{post['title']}]({post['link']})")
+    lines.append(f"\n[All Posts]({BLOG_URL})")
     return lines
 
 
+def summarize_languages(language_bytes):
+    if not language_bytes:
+        return ""
+    languages = sorted(language_bytes, key=language_bytes.get, reverse=True)[:TOP_LANGUAGES]
+    suffix = "..." if len(language_bytes) > TOP_LANGUAGES else ""
+    return ", ".join(languages) + suffix
+
+
 def build_tag_section():
-    repos = fetch_json(GITHUB_API)
+    repos = fetch_json(f"{GITHUB_API}/repos")
     if not repos:
         return []
 
@@ -91,10 +102,15 @@ def build_tag_section():
     for repo in repos:
         name = repo["name"]
         description = (repo.get("description") or "").strip()
+        languages = summarize_languages(
+            fetch_json(f"{GITHUB_API}/repos/{name}/languages")
+        )
+        row = (
+            f"| [{name}](https://github.com/{GITHUB_USER}/{name}) "
+            f"| {description} | {languages} |"
+        )
         for topic in repo.get("topics", []):
-            by_topic.setdefault(
-                topic, []
-            ).append(f"| [{name}](https://github.com/{GITHUB_USER}/{name}) | {description} |")
+            by_topic.setdefault(topic, []).append(row)
 
     if not by_topic:
         return []
@@ -103,16 +119,21 @@ def build_tag_section():
     for topic in sorted(by_topic):
         sections.append(
             f"## {topic}\n"
-            f"| Repository | Description |\n"
-            f"|------------|-------------|\n"
+            f"| Repository | Description | Languages |\n"
+            f"|------------|-------------|-----------|\n"
             + "\n".join(by_topic[topic])
         )
     return sections
 
 
+def load_profile():
+    with open(PROFILE_PATH, encoding="utf-8") as handle:
+        return handle.read().strip()
+
+
 def main():
     sections = build_blog_section() + build_tag_section()
-    readme = "\n\n".join(sections) + "\n"
+    readme = load_profile() + "\n\n" + "\n\n".join(sections) + "\n"
     with open(README_PATH, "w", encoding="utf-8") as handle:
         handle.write(readme)
 
