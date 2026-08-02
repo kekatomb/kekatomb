@@ -81,7 +81,7 @@ def build_blog_section():
     lines = ["## Latest Blog Posts"]
     for post in posts[:MAX_POSTS]:
         lines.append(f"- {post['pub_date']}, [{post['title']}]({post['link']})")
-    return lines
+    return ["\n".join(lines)]
 
 
 def summarize_languages(language_bytes):
