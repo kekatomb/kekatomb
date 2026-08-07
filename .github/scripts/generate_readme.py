@@ -102,6 +102,8 @@ def build_tag_section():
         name = repo["name"]
         description = (repo.get("description") or "").strip()
         languages = summarize_languages(fetch_json(f"{REPOS_API}/{name}/languages"))
+        if not languages:
+            continue
         row = (
             f"| [{name}](https://github.com/{GITHUB_USER}/{name}) "
             f"| {description} | {languages} |"
