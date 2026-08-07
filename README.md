@@ -7,6 +7,4 @@ GET OFF MY 'PUTER KITTAY!!!
 ## Studying
 | Repository | Description | Languages |
 |------------|-------------|-----------|
-| [cryptography](https://github.com/kekatomb/cryptography) | military grade |  |
 | [lean](https://github.com/kekatomb/lean) | all of this to make some purrpp wock? | Lean |
-| [reverse-engineering](https://github.com/kekatomb/reverse-engineering) | american IP law doesn't apply |  |
